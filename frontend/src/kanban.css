@@ -1,0 +1,43 @@
+body {
+  background-color: #f2f4f8;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.kanban-board {
+  background-color: white;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.05);
+  scroll-behavior: smooth;
+}
+
+.kanban-column {
+  background-color: #f9f9f9;
+  border-radius: 6px;
+  padding: 0.75rem;
+  min-height: 400px;
+}
+
+.kanban-header {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  color: #2d3e50;
+}
+
+.kanban-dropzone {
+  min-height: 200px;
+}
+
+.kanban-card {
+  background-color: white;
+  border-radius: 6px;
+  border: 1px solid #e0e0e0;
+  padding: 0.75rem;
+  font-size: 0.9rem;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.kanban-card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}

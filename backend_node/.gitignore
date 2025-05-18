@@ -1,0 +1,13 @@
+node_modules
+.env
+
+.wwebjs_auth
+.wwebjs_cache
+
+database/acompanhamento
+uploads
+public
+cache
+
+teste.js
+certificado.pfx

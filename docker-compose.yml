@@ -1,0 +1,74 @@
+version: "3.9"
+
+services:
+  db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: crawlerdb
+      MYSQL_USER: crawler
+      MYSQL_PASSWORD: crawlerpass
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: root
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+
+  backend_python:
+    build:
+      context: ./backend_python
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - DATABASE_URL=mysql+pymysql://crawler:crawlerpass@db:3306/crawlerdb
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    volumes:
+      - ./backend_python:/app
+
+  backend_node:
+    build:
+      context: ./backend_node
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - DB_HOST=db
+      - DB_USER=crawler
+      - DB_PASSWORD=crawlerpass
+      - DB_NAME=crawlerdb
+    ports:
+      - "3003:3003"
+    depends_on:
+      - db
+    volumes:
+      - ./backend_node:/app
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend_python
+      - backend_node
+    volumes:
+      - ./frontend:/app
+
+volumes:
+  db_data:
