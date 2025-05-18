@@ -4,22 +4,18 @@ from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import TimeoutException, NoSuchElementException
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
 
 from analysis.read_pdf_online import read_pdf_online
 from analysis.transformers import process_info
-from app.services.process_service import get_processes_by_status
 
 options = uc.ChromeOptions()
 options.headless = True
+options.binary_location = "/usr/bin/google-chrome"
 
-chrome_options = Options()
-chrome_options.add_argument("--headless=new")
+driver = uc.Chrome(options=options)
 
 def scrape_data(max_paginas=None, dtInicio="13/11/2024", dtFim="13/11/2024", cdCaderno="12", pesquisaLivre='"RPV" e "pagamento pelo INSS"'):
     resultados = []
-    driver = uc.Chrome(options=options)
 
     print("Starting...")
     driver.get("https://dje.tjsp.jus.br/cdje/consultaAvancada.do")
@@ -186,4 +182,4 @@ def scrape_details_info(db, processes):
         print("Timeout: não foi possível encontrar o elemento.")
     except Exception as e:
         print(f"Erro ao extrair conteúdo: {str(e)}")
-        
+

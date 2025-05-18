@@ -16,3 +16,4 @@ torch>=1.13.0
 selenium
 undetected_chromedriver
 transformers 
+mysql-connector-python

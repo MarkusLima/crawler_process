@@ -149,7 +149,7 @@ const Kanban: React.FC = () => {
             <div className="container py-4">
                 <div className="kanban-board">
                     <div className="row mb-4">
-                        <h4 className="mb-0 col-md-4 d-flex justify-content-start"><Scale/>Publicações</h4>
+                        <h4 className="mb-0 col-md-4 d-flex justify-content-start"><Scale/>Publicações.</h4>
                         <div className="col-md-8 d-flex justify-content-end">
                             <div className="row">
                                 <div className="col-md-5">

@@ -3,7 +3,8 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.exc import OperationalError
 
-DATABASE_URL = os.getenv("DATABASE_URL", "mysql+pymysql://crawler:crawlerpass@db:3306/crawlerdb")
+DATABASE_URL = os.getenv("DATABASE_URL","mysql+mysqlconnector://crawler:crawlerpass@db:3306/crawlerdb")
+
 print("DATABASE_URL:", DATABASE_URL)
 
 try:

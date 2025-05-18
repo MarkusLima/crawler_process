@@ -1,13 +1,8 @@
-from sqlalchemy.orm import Session
-from app.models.scraped_data import ScrapedData
-from app.schemas.scraped_data import ScrapedDataCreate
-
-def save_scheduler(db: Session, data: ScrapedDataCreate):
+def save_scheduler(conn , data):
     try:
-        scraped_data = ScrapedData( title=data['title'])
-        db.add(scraped_data)
-        db.commit()
-        db.refresh(scraped_data)
+        query = "INSERT INTO scraped_data (title) VALUES (%s)"
+        conn.execute(query, (data['title'],))
+        conn.commit()
         return
     except Exception as e:
         raise Exception(f"Erro ao salvar dados no banco de dados: {str(e)}")

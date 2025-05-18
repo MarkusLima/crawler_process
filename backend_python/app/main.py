@@ -1,13 +1,14 @@
 import os
+import time
 from fastapi import FastAPI
+from apscheduler.schedulers.background import BackgroundScheduler
 from app.api.routes import users, hearth, job
-from app.db.session import engine
-from app.models.base import Base  
-from app.models.user import User 
-from app.models.process import Process
-from app.models.user_process import UserProcess
-from app.models.scraped_data import ScrapedData
-
+from app.db.create_db import create_db_and_tables
+from scheduler.action import (
+    scheduled_job,
+    schreduler_job_complete_infos,
+    schreduler_job_details_content
+)
 
 app = FastAPI()
 
@@ -16,13 +17,27 @@ app.include_router(hearth.router)
 app.include_router(job.router)
 app.include_router(users.router, prefix="/users", tags=["Users"])
 
-# Criação das tabelas no evento de inicialização
+# Agendador global
+scheduler = BackgroundScheduler()
+
 @app.on_event("startup")
 def startup_event():
-    print("Modelos registrados no Base:")
-    for table in Base.metadata.tables.keys():
-        print(f"- {table}")
+    # Cria o banco de dados e tabelas (apenas se não existirem)
+    create_db_and_tables()
 
-    print("Criando tabelas no banco de dados...")
-    Base.metadata.create_all(bind=engine)
-    print("Tabelas criadas com sucesso!")
+    # Agendando tarefas
+    scheduler.add_job(scheduled_job, "cron", hour=8, minute=0)   # 08:00
+    scheduler.add_job(schreduler_job_details_content, "cron", hour=10, minute=0)  # 10:00
+    scheduler.add_job(schreduler_job_complete_infos, "cron", hour=12, minute=0)  # 12:00
+
+    scheduler.add_job(scheduled_job, "cron", hour=13, minute=0)  # 13:00
+    scheduler.add_job(schreduler_job_details_content, "cron", hour=15, minute=0)  # 15:00
+    scheduler.add_job(schreduler_job_complete_infos, "cron", hour=17, minute=0)  # 17:00
+
+    scheduler.start()
+    print("Scheduler iniciado com sucesso.")
+
+@app.on_event("shutdown")
+def shutdown_event():
+    scheduler.shutdown()
+    print("Scheduler encerrado com sucesso.")

@@ -1,4 +1,4 @@
-FROM node:20
+FROM node:18
 
 WORKDIR /app
 
@@ -10,5 +10,7 @@ COPY . .
 RUN chmod -R 777 /app
 
 EXPOSE 3003
+
+COPY .env.example .env
 
 CMD ["npm", "run", "start"]

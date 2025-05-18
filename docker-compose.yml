@@ -33,8 +33,13 @@ services:
     restart: always
     environment:
       - DATABASE_URL=mysql+pymysql://crawler:crawlerpass@db:3306/crawlerdb
+      - DB_HOST=db
+      - DB_USER=crawler
+      - DB_PASSWORD=crawlerpass
+      - DB_NAME=crawlerdb
     ports:
       - "8000:8000"
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
     depends_on:
       - db
     volumes:
@@ -56,6 +61,7 @@ services:
       - db
     volumes:
       - ./backend_node:/app
+      - /app/node_modules
 
   frontend:
     build:
@@ -69,6 +75,7 @@ services:
       - backend_node
     volumes:
       - ./frontend:/app
+      - /app/node_modules
 
 volumes:
   db_data:
