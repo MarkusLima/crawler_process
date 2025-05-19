@@ -11,7 +11,7 @@ module.exports = () => {
 
     const router = express.Router();
 
-    app.set('port', PORT);
+    app.set('port', PORT || 3003);
 
     // Padrão são 1000 parâmetros e 100kb de limite
     app.use(cors());

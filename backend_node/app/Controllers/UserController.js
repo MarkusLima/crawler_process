@@ -39,7 +39,7 @@ class UserController {
 
     static async login(req, res) {
 
-        if (!process.env.SECRET) {
+        if (!JwtSecret) {
             return res.status(StatusCodes.INTERNAL_SERVER_ERROR).send({ error: 'JWT_SECRET não definido.' });
         }
         

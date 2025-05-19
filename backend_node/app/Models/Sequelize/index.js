@@ -9,9 +9,11 @@ const Log = require('../../Utils/Log');
 const basename = path.basename(__filename);
 const db = {};
 
-const {
-    MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE, NODE_ENV,
-} = process.env;
+const MYSQL_HOST = process.env.MYSQL_HOST || "db";
+const MYSQL_USER = process.env.MYSQL_USER || "crawler";
+const MYSQL_PASSWORD = process.env.MYSQL_PASSWORD || "crawlerpass";
+const MYSQL_DATABASE = process.env.MYSQL_DATABASE || "crawlerdb";
+const NODE_ENV = process.env.NODE_ENV || "development"
 
 const sequelize = new Sequelize(MYSQL_DATABASE, MYSQL_USER, MYSQL_PASSWORD, {
     host: MYSQL_HOST,

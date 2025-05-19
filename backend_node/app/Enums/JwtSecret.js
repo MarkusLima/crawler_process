@@ -1,5 +1,5 @@
 const Ambiente = require('./Ambiente');
 
-const JwtSecret = (process.env.NODE_ENV === Ambiente.TEST) ? 'abc' : process.env.SECRET;
+const JwtSecret = process.env.SECRET || 'qualquerumaserve';
 
 module.exports = JwtSecret;
