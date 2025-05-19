@@ -11,6 +11,4 @@ RUN chmod -R 777 /app
 
 EXPOSE 3003
 
-COPY .env.example .env
-
 CMD ["npm", "run", "start"]

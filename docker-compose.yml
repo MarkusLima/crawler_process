@@ -55,6 +55,10 @@ services:
       - DB_USER=crawler
       - DB_PASSWORD=crawlerpass
       - DB_NAME=crawlerdb
+      - NODE_ENV=development
+      - PORT=3003
+      - URL_API=http://localhost:3003
+      - SECRET=hashqualquer
     ports:
       - "3003:3003"
     depends_on:
@@ -76,6 +80,8 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
+    environment:
+      - VITE_BACK_END_URL="http://localhost:3003"
 
 volumes:
   db_data:
