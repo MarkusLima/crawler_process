@@ -51,14 +51,11 @@ services:
       dockerfile: Dockerfile
     restart: always
     environment:
-      - DB_HOST=db
-      - DB_USER=crawler
-      - DB_PASSWORD=crawlerpass
-      - DB_NAME=crawlerdb
-      - NODE_ENV=development
-      - PORT=3003
-      - URL_API=http://localhost:3003
-      - SECRET=hashqualquer
+      - MYSQL_HOST=db
+      - MYSQL_PORT=3306
+      - MYSQL_USER=crawler
+      - MYSQL_PASSWORD=crawlerpass
+      - MYSQL_DATABASE=crawlerdb
     ports:
       - "3003:3003"
     depends_on:
@@ -81,7 +78,7 @@ services:
       - ./frontend:/app
       - /app/node_modules
     environment:
-      - VITE_BACK_END_URL="http://localhost:3003"
+      - VITE_BACK_END_URL=http://localhost:3003
 
 volumes:
   db_data:
