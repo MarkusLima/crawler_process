@@ -135,23 +135,30 @@ def capture_data(tr_elements):
     return resultados
 
 def scrape_details_content(db, processes):
-
     try:
-
         print("Executando scrape_details_content.")
 
         for process in processes:
-            link = "https://dje.tjsp.jus.br/cdje/getPaginaDoDiario.do?"+process.link
+            link = "https://dje.tjsp.jus.br/cdje/getPaginaDoDiario.do?" + process['link']
             print(f"Link: {link}")
 
             # Extrai o conteúdo do PDF
             content = read_pdf_online(link)
-            process.conteudo_publicacao = content
-            process.status = "processed"
+            print(content)
+            process['conteudo_publicacao'] = content
+            process['status'] = "processed"
+
+            # Atualiza no banco de dados
+            with db.cursor() as cursor:
+                update_query = """
+                    UPDATE processes
+                    SET conteudo_publicacao = %s, status = %s
+                    WHERE link = %s
+                """
+                cursor.execute(update_query, (content, "processed", process['link']))
             db.commit()
 
-
-        print("Conteúdo extraídos e salvos.")
+        print("Conteúdos extraídos e salvos.")
 
     except TimeoutException:
         print("Timeout: não foi possível encontrar o elemento.")
@@ -164,16 +171,30 @@ def scrape_details_info(db, processes):
         print("Executando scrape_details_info.")
 
         for process in processes:
-
-            infos = process_info(process.conteudo_publicacao)
+            infos = process_info(process['conteudo_publicacao'])
             print(infos)
 
+            # Atualiza os campos no dicionário process
             for info in infos:
                 field_name = info["field"]
                 value = None if info["resposta"] == "Não encontrado" else str(info["resposta"])
-                setattr(process, field_name, value)
+                process[field_name] = value
 
-            process.status = "nova"
+            process['status'] = "nova"
+
+            # Atualiza no banco de dados
+            set_fields = ", ".join([f"{info['field']} = %s" for info in infos])
+            update_query = f"""
+                UPDATE processes
+                SET {set_fields}, status = %s
+                WHERE link = %s
+            """
+            values = [process[info['field']] for info in infos]
+            values.append("nova")
+            values.append(process['link'])
+
+            with db.cursor() as cursor:
+                cursor.execute(update_query, tuple(values))
             db.commit()
 
         print("Conteúdos extraídos e salvos.")

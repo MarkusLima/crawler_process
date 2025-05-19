@@ -1,7 +1,7 @@
 def create_process(con, process):
     try:
         # Verifica se o processo já existe
-        query = "SELECT * FROM process WHERE link = %s"
+        query = "SELECT * FROM processes WHERE link = %s"
         with con.cursor(dictionary=True) as cursor:
             cursor.execute(query, (process['link'],))
             existing_process = cursor.fetchone()
@@ -10,7 +10,7 @@ def create_process(con, process):
 
             # Se não existir, cria um novo processo
             insert_query = """
-                INSERT INTO process (link, conteudo_publicacao, data_disponibilizacao, reu, status)
+                INSERT INTO processes (link, conteudo_publicacao, data_disponibilizacao, reu, status)
                 VALUES (%s, %s, %s, %s, %s)
             """
             values = (
@@ -32,7 +32,7 @@ def create_process(con, process):
 
 def get_processes_by_status(con, status: str):
     try:
-        query = "SELECT * FROM process WHERE status = %s"
+        query = "SELECT * FROM processes WHERE status = %s"
         with con.cursor(dictionary=True) as cursor:
             cursor.execute(query, (status,))
             processes = cursor.fetchall()
